@@ -4,31 +4,42 @@
 <template>
 
 	<div class="countdown-view">
-		<div class="content">			
-			
-			<div class="sleeps">
-				<span v-if="sleeps">
-					{{ sleeps }} Sleeps
-				</span>
-				<span v-if="( ! sleeps )">
-					Today
-				</span>
-			</div>
+		<div class="content">
 
-			<div class="times">
-				<span v-if="days" class="time">
-					{{ days }} Days
-				</span>
-				<span v-if="( days || hours )" class="time">
-					{{ hours }} Hours
-				</span>
-				<span v-if="( days || hours || minutes )" class="time">
-					{{ minutes }} Minutes
-				</span>
-				<span v-if="( days || hours || minutes || seconds )" class="time">
-					{{ seconds }} Seconds
-				</span>
-			</div>
+			<table class="times">
+				<tr class="time" :class="{ active: ( sleeps ) }">
+					<td class="value">
+						{{ sleeps }}
+					</td>
+					<th class="label">
+						Sleeps
+					</th>
+				</tr>
+				<tr class="time" :class="{ active: ( hours ) }">
+					<td class="value">
+						{{ hours }}
+					</td>
+					<th class="label">
+						Hours
+					</th>
+				</tr>
+				<tr class="time" :class="{ active: ( hours || minutes ) }">
+					<td class="value">
+						{{ minutes }}
+					</td>
+					<th class="label">
+						Minutes
+					</th>
+				</tr>
+				<tr class="time" :class="{ active: ( hours || minutes || seconds ) }">
+					<td class="value">
+						{{ seconds }}
+					</td>
+					<th class="label">
+						Seconds
+					</th>
+				</tr>
+			</table>
 
 		</div>
 	</div>
@@ -36,13 +47,16 @@
 </template>
 
 <script>
+
+	import { CountdownCalculator } from "./countdown-calculator";
+
+	var countdownCalculator = new CountdownCalculator();
 	
 	export default {
 		data() {
 
 			return({
 				sleeps: 0,
-				days: 0,
 				hours: 0,
 				minutes: 0,
 				seconds: 0,
@@ -52,28 +66,76 @@
 		},
 		created() {
 
-			var self = this;
+			// Bind the external hanlers to the current scope.
+			this.handleBlur = this.handleBlur.bind( this );
+			this.handleFocus = this.handleFocus.bind( this );
+			this.handleTick = this.handleTick.bind( this );
 
-			this.timer = setInterval(
-				function() {
+			this.startTimer();
 
-					self.updateCountdown();
+			window.addEventListener( "focus", this.handleFocus );
+			window.addEventListener( "blur", this.handleBlur );
 
-				},
-				1000
-			);
 
 		},
 		destroyed() {
 
-			clearInterval( this.timer );
+			this.stopTimer();
+
+			window.removeEventListener( "focus", this.handleFocus );
+			window.removeEventListener( "blur", this.handleBlur );
 
 		},
 		methods: {
 
+			handleBlur() {
+
+				console.warn( "Stopping timer due to lack of focus." );
+				this.stopTimer();
+
+			},
+
+			handleFocus() {
+
+				console.warn( "Starting timer due to regained focus." );
+				this.startTimer();
+
+			},
+
+			handleTick() {
+
+				this.updateCountdown();
+
+			},
+
+			startTimer() {
+
+				if ( this.timer ) {
+
+					return;
+
+				}
+
+				this.timer = setInterval( this.handleTick, 1000 );
+				this.updateCountdown();
+
+			},
+
+			stopTimer() {
+
+				clearInterval( this.timer );
+				this.timer = null;
+
+			},
+
 			updateCountdown() {
 
-				console.log( Date.now() );
+				var countdown = countdownCalculator.calculate( +this.$route.params.utcTarget );
+
+				this.sleeps = countdown.sleeps;
+				this.hours = countdown.hours;
+				this.minutes = countdown.minutes;
+				this.seconds = countdown.seconds;
 
 			}
 

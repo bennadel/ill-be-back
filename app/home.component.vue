@@ -54,8 +54,7 @@
 				var day = parseInt( this.form.day, 10 );
 				var hour = parseInt( this.form.hour, 10 );
 				var minute = parseInt( this.form.minute, 10 );
-console.log( this.form );
-console.log( year, month, day, hour, minute );
+
 				if (
 					isNaN( year ) ||
 					isNaN( month ) ||

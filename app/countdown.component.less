@@ -9,5 +9,39 @@
 }
 
 .content {
+	font-variant: small-caps ;
 	margin: auto auto auto auto ;
+	text-align: center ;
+}
+
+.times {
+	border-spacing: 15px ;
+	font-family: monospace ;
+	font-size: 40px ;
+	line-height: 45px ;
+}
+
+.value {
+	background-color: #333333 ;
+	border-radius: 10px 10px 10px 10px ;
+	color: #999999 ;
+	font-weight: 800 ;
+	padding: 10px 22px 10px 22px ;
+
+	.time.active & {
+		background-color: #ff3366 ;
+		color: #ffffff ;
+		text-shadow: 0px 1px #430313 ;
+	}
+}
+
+.label {
+	color: #666666 ;
+	font-weight: 400 ;
+	padding-left: 5px ;
+	text-align: left ;
+
+	.time.active & {
+		color: #ffffff ;
+	}
 }
