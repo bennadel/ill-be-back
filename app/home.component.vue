@@ -11,14 +11,14 @@
 			</h1>
 
 			<div class="fields">
-				<input type="string" v-model="form.year" placeholder="YYYY" class="field" />
-				<input type="string" v-model="form.month" placeholder="MM" class="field" />
-				<input type="string" v-model="form.day" placeholder="DD" class="field" />
+				<input type="string" v-model="form.year" title="Year" placeholder="YYYY" class="field" />
+				<input type="string" v-model="form.month" title="Month" placeholder="MM" class="field" />
+				<input type="string" v-model="form.day" title="Day" placeholder="DD" class="field" />
 				<span class="seperator">
 					@
 				</span>
-				<input type="string" v-model="form.hour" placeholder="HH" class="field" />
-				<input type="string" v-model="form.minute" placeholder="NN" class="field" />
+				<input type="string" v-model="form.hour" title="Hour" placeholder="HH" class="field" />
+				<input type="string" v-model="form.minute" title="Minute" placeholder="NN" class="field" />
 			</div>
 
 			<button type="submit" class="submit">
@@ -33,6 +33,7 @@
 <script>
 	
 	export default {
+		// I return the default reactive data for the component.
 		data() {
 
 			return({
@@ -46,7 +47,10 @@
 			});
 
 		},
+
 		methods: {
+
+			// I take the user to the countdown, assuming the data is valid.
 			setupCountdown() {
 
 				var year = parseInt( this.form.year, 10 );
